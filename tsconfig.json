@@ -15,7 +15,7 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": "./app/",
-    "path": {
+    "paths": {
       "@/components/*": ["components/*"],
       "@/ui/*": ["components/ui/*"],
       "@/screens/*": ["components/screens/*"],
