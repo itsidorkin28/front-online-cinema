@@ -8,6 +8,7 @@ import { Meta } from '@/utils/meta/Meta'
 import Heading from '@/ui/heading/Heading'
 import Button from '@/ui/form-elements/Button/Button'
 import AuthFields from '@/screens/auth/AuthFields'
+import { useActions } from '@/hooks/useActions'
 
 const Auth = () => {
 	useAuthRedirect()
@@ -20,20 +21,14 @@ const Auth = () => {
 		mode: 'onChange',
 	})
 
-	const login = (data: any) => {
-		console.log(data)
-	}
-	const register = (data: any) => {
-		console.log(data)
+	const {login, register} = useActions()
 
-	}
 	const onSubmit = handleSubmit(data => {
 		if (type === 'login') login(data)
 		else if (type === 'register') register(data)
 
 		reset()
 	})
-
 
 	return (
 		<Meta title={'Auth'}>

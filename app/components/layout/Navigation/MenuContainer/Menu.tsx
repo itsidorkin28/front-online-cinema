@@ -3,6 +3,13 @@ import { IMenu } from '@/components/layout/Navigation/MenuContainer/menu.interfa
 import styles from './Menu.module.scss'
 import { MenuItem } from '@/components/layout/Navigation/MenuContainer/MenuItem'
 import { AuthItems } from '@/components/layout/Navigation/MenuContainer/auth/AuthItems'
+import dynamic from 'next/dynamic'
+
+const DynamicAuthItems = dynamic<React.ComponentProps<typeof AuthItems>>(
+	() => import('./auth/AuthItems').then(mod => mod.AuthItems), {
+		ssr: false
+	}
+)
 
 export const Menu = ({ title, items }: IMenu): JSX.Element => {
 	return <div className={styles.menu}>
@@ -17,7 +24,7 @@ export const Menu = ({ title, items }: IMenu): JSX.Element => {
 				                 icon={item.icon}
 				/>
 			})}
-			{title === 'General' ? <AuthItems /> : null}
+			{title === 'General' ? <DynamicAuthItems /> : null}
 		</ul>
 	</div>
 }
