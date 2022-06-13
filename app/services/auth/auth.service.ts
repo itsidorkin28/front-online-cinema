@@ -35,7 +35,7 @@ export const AuthService = {
 		localStorage.removeItem('user')
 	},
 
-	async getNewToken() {
+	async getNewTokens() {
 		const refreshToken = Cookies.get('refreshToken')
 		const response = await axiosClassic.post<IAuthResponse>(getAuthUrl('/login/access-token'),
 			{ refreshToken },
