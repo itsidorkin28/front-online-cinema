@@ -1,14 +1,12 @@
-import React, { ReactNode } from 'react'
+import React, { FC } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import Layout from '@/components/layout/Layout'
 import ReduxToast from './ReduxToast'
 import { Provider } from 'react-redux'
 import { store } from '@/store/store'
 import HeadProvider from './HeadProvider/HeadProvider'
-
-interface IMainProvider {
-	children: ReactNode
-}
+import AuthProvider from './AuthProvider/AuthProvider'
+import { ComponentAuthFieldsType } from '@/shared/types/auth.types'
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -17,15 +15,19 @@ const queryClient = new QueryClient({
 		},
 	},
 })
-export const MainProvider = ({ children }: IMainProvider): JSX.Element => {
+export const MainProvider: FC<ComponentAuthFieldsType> = (
+	{ children, Component: { isOnlyAdmin, isOnlyUser } },
+): JSX.Element => {
 	return (
 		<HeadProvider>
 			<Provider store={store}>
 				<QueryClientProvider client={queryClient}>
 					<ReduxToast />
-					<Layout>
-						{children}
-					</Layout>
+					<AuthProvider Component={{ isOnlyAdmin, isOnlyUser }}>
+						<Layout>
+							{children}
+						</Layout>
+					</AuthProvider>
 				</QueryClientProvider>
 			</Provider>
 		</HeadProvider>
