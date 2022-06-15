@@ -1,12 +1,9 @@
 import React from 'react'
 import { NextPageAuth } from '@/shared/types/auth.types'
+import UserList from '@/screens/admin/users/UserList'
 
 const UsersListPage: NextPageAuth = () => {
-	return (
-		<div>
-			UsersList
-		</div>
-	)
+	return <UserList/>
 }
 
 UsersListPage.isOnlyAdmin = true
