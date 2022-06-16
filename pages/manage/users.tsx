@@ -1,4 +1,3 @@
-import React from 'react'
 import { NextPageAuth } from '@/shared/types/auth.types'
 import UserList from '@/screens/admin/users/UserList'
 
