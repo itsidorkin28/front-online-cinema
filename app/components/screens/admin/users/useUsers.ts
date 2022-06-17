@@ -30,7 +30,7 @@ export const useUsers = () => {
 	}
 
 	const { mutateAsync: deleteAsync } = useMutation('delete user', (userId: string) => {
-		return UserService.deleteUser(userId)
+		return UserService.delete(userId)
 	}, {
 		onError: (error) => toastError(error, 'Delete user'),
 		onSuccess: () => {

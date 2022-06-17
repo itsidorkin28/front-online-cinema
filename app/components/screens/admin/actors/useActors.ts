@@ -29,7 +29,7 @@ export const useActors = () => {
 	}
 
 	const { mutateAsync: deleteAsync } = useMutation('delete actor', (actorId: string) => {
-		return ActorService.deleteActor(actorId)
+		return ActorService.delete(actorId)
 	}, {
 		onError: (error) => toastError(error, 'Delete actor'),
 		onSuccess: () => {
