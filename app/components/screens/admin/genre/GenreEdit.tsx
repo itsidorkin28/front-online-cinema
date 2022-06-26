@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { IGenreEditInput } from '@/screens/admin/genre/genre-edit.interface'
 import { useGenreEdit } from '@/screens/admin/genre/useGenreEdit'
 import { Meta } from '@/utils/meta/Meta'
@@ -7,9 +7,26 @@ import AdminNavigation from '@/ui/admin-navigation/AdminNavigation'
 import Heading from '@/ui/heading/Heading'
 import { SkeletonLoader } from '@/ui/SkeletonLoader'
 import Field from '@/ui/form-elements/Field/Field'
+import SlugField from '@/ui/form-elements/SlugField/SlugField'
+import generateSlug from '@/utils/string/generateSlug'
+import formStyles from '../../../ui/form-elements/adminForm.module.scss'
+import Button from '@/ui/form-elements/Button/Button'
+import { stripHtml } from 'string-strip-html'
+import dynamic from 'next/dynamic'
+
+const DynamicTextEditor = dynamic(() => import('@/ui/form-elements/TextEditor'), {
+	ssr: false,
+})
 
 const GenreEdit: FC = () => {
-	const { handleSubmit, register, formState: { errors }, setValue, getValues } = useForm<IGenreEditInput>({
+	const {
+		handleSubmit,
+		register,
+		formState: { errors },
+		setValue,
+		getValues,
+		control,
+	} = useForm<IGenreEditInput>({
 		mode: 'onChange',
 	})
 	const { isLoading, onSubmit } = useGenreEdit(setValue)
@@ -17,11 +34,11 @@ const GenreEdit: FC = () => {
 		<Meta title={'Edit genre'}>
 			<AdminNavigation />
 			<Heading title={'Edit genre'} />
-			<form onSubmit={() => handleSubmit(onSubmit)}>
+			<form onSubmit={() => handleSubmit(onSubmit)} className={formStyles.form}>
 				{isLoading
 					? <SkeletonLoader count={3} />
 					: <>
-						<div>
+						<div className={formStyles.fields}>
 							<Field {...register('name',
 								{
 									required: 'Name is required',
@@ -32,7 +49,10 @@ const GenreEdit: FC = () => {
 							/>
 
 							<div style={{ width: '31%' }}>
-								{/*	todo: Slug field */}
+								<SlugField register={register} error={errors.slug} generate={() => {
+									setValue('slug', generateSlug(getValues('name')))
+								}
+								} />
 							</div>
 
 							<Field {...register('icon',
@@ -43,10 +63,25 @@ const GenreEdit: FC = () => {
 							       error={errors.name}
 							       style={{ width: '31%' }}
 							/>
-							{/*	todo: Text editor draft.js */}
-
-							<button>Update</button>
 						</div>
+
+						<Controller control={control}
+						            name={'description'}
+						            defaultValue={''}
+						            render={({ field: { value, onChange }, fieldState: { error } }) => {
+							            return <DynamicTextEditor onChange={onChange} value={value} error={error}
+							                                      placeholder={'Description'} />
+						            }}
+						            rules={{
+							            validate: {
+								            required: (v) =>
+									            (v && stripHtml(v).result.length > 0) ||
+									            'Description is required!',
+							            },
+						            }}
+						/>
+
+						<Button>Update</Button>
 					</>}
 			</form>
 		</Meta>
